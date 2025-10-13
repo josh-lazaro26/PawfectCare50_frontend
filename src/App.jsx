@@ -1,4 +1,6 @@
+// App.jsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import {
   DashboardRoute,
   AdoptionRequestRoute,
@@ -7,32 +9,34 @@ import {
 } from "./Routes/AdminRoutes/AdminRoutes";
 import {
   UserLoginRoute,
-  AboutUsRoute,
-  UserAdoptionRoute,
   UserRegistrationRoute,
-  UserBookingRoute,
   UserBookingFormRoute,
   UserAdoptionFormRoute,
   UserForgotPasswordRoute,
+  UserMainRoute,
 } from "./Routes/UserRoutes/UserRoutes";
 import { PetRoute } from "./Routes/PetRoutes/PetRoutes";
+
 const routers = createBrowserRouter([
   PetRoute,
   DashboardRoute,
+  UserMainRoute,
   AdoptionRequestRoute,
   AppointmentPageRoute,
   MessagesPageRoute,
   UserLoginRoute,
-  AboutUsRoute,
-  UserAdoptionRoute,
   UserRegistrationRoute,
-  UserBookingRoute,
   UserBookingFormRoute,
   UserForgotPasswordRoute,
   UserAdoptionFormRoute,
 ]);
 
 function App() {
-  return <RouterProvider router={routers} />;
+  return (
+    <AnimatePresence mode="wait">
+      <RouterProvider router={routers} />
+    </AnimatePresence>
+  );
 }
+
 export default App;
