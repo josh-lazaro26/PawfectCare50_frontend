@@ -55,9 +55,7 @@ const UserLoginRoute = {
 const UserRegistrationRoute = {
   path: "/user/registration",
   element: (
-    <PageTransition>
-      <UserRegistrationPage />
-    </PageTransition>
+    <UserRegistrationPage />
   ),
 };
 

@@ -14,9 +14,9 @@ export default function UserRegistrationPage() {
     birthdate: "",
     age: "",
     sex: "",
-    address: "", // ✅ added
+    address: "", 
     password: "",
-    confirmPassword: "", // ✅ added
+    confirmPassword: "", 
     role: "pet owner",
   });
   const [loading, setLoading] = useState(false);
@@ -85,7 +85,7 @@ export default function UserRegistrationPage() {
       }
 
       alert("Registration successful!");
-      // navigate("/user/login");
+      navigate("/user/login");
     } catch (err) {
       setError(err.message);
     } finally {

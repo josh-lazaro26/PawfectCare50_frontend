@@ -51,6 +51,7 @@ function UserLoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
+
       const data = await res.json();
 
       if (!res.ok) {
