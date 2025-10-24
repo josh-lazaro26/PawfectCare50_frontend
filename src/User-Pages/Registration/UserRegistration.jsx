@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { getApiBaseUrl } from "../../../../Backend/config/API_BASE_URL";
 import NotificationModal from "../../Components/Modals/NotificationModal";
+import LoadingOverlay from "../../Components/Modals/LoadingOverlay"; // <-- new import
 
 function UserRegistrationPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,7 @@ function UserRegistrationPage() {
     isOpen: false,
     type: "",
     message: "",
+    redirectTo: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -52,7 +54,6 @@ function UserRegistrationPage() {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -67,37 +68,29 @@ function UserRegistrationPage() {
     try {
       const response = await fetch(`${getApiBaseUrl()}/users/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          monthly_salary: formData.monthly_salary,
-          birthdate: formData.birthdate,
-          age: formData.age,
-          sex: formData.sex,
-          address: formData.address,
-          password: formData.password,
+          ...formData,
           role: "pet owner",
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+      if (!response.ok) throw new Error(data.message || "Registration failed");
 
       setNotification({
         isOpen: true,
         type: "success",
-        message: "Rigistration Complete",
+        message: "Registration Complete!",
+        redirectTo: "/user/login",
       });
-      navigate("/user/login");
     } catch (err) {
-      setError(err.message);
+      setNotification({
+        isOpen: true,
+        type: "error",
+        message: err.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -340,8 +333,11 @@ function UserRegistrationPage() {
         onClose={() => setNotification({ ...notification, isOpen: false })}
         type={notification.type}
         message={notification.message}
+        redirectTo={notification.redirectTo}
       />
+
+      <LoadingOverlay loading={loading} />
     </div>
   );
 }
-export default UserRegistrationPage();
+export default UserRegistrationPage;

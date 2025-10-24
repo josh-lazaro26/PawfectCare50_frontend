@@ -96,7 +96,6 @@ function AppointmentPage() {
       setEmailSent(true);
     } catch (err) {
       console.error("Error approving request:", err);
-      alert(err.message);
     } finally {
       setLoading(false);
       closeModal();
@@ -133,7 +132,6 @@ function AppointmentPage() {
       setEmailSent(true);
     } catch (err) {
       console.error("Error rejecting request:", err);
-      alert(err.message);
     } finally {
       setLoading(false);
       closeModal();

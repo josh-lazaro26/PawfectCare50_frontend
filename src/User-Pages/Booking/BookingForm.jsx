@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BookingConfirmationModal from "../../Components/Modals/BookingConfirmationModal";
 import { getApiBaseUrl } from "../../../../Backend/config/API_BASE_URL";
+import NotificationModal from "../../Components/Modals/NotificationModal";
 
 function BookingForm() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,12 @@ function BookingForm() {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [notification, setNotification] = useState({
+    isOpen: false,
+    type: "",
+    message: "",
+    redirectTo: "",
+  });
   const navigate = useNavigate();
 
   // Get today's date for minimum date validation
@@ -86,8 +93,12 @@ function BookingForm() {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        alert("You must be logged in to book an appointment.");
-        navigate("/user/login");
+        setNotification({
+          isOpen: true,
+          type: "error",
+          message: "You must be logged in to book an appointment.",
+          redirectTo: "/user/login",
+        });
         return;
       }
 
@@ -113,12 +124,20 @@ function BookingForm() {
           navigate("/user/booking");
         }, 3000);
       } else {
-        alert("Failed to create booking. Please sign in and try again.");
-        navigate("/user/login");
+        setNotification({
+          isOpen: true,
+          type: "error",
+          message: "Failed to create booking. Please sign in and try again.",
+          redirectTo: "/user/login",
+        });
       }
     } catch (error) {
       console.error("Error creating booking:", error);
-      alert("Server error. Please try again later.");
+      setNotification({
+        isOpen: true,
+        type: "error",
+        message: "Server error. Please try again later.",
+      });
     } finally {
       setLoading(false);
     }
@@ -307,7 +326,13 @@ function BookingForm() {
           </p>
         </div>
       </div>
-
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        type={notification.type}
+        message={notification.message}
+        redirectTo={notification.redirectTo}
+      />
       <BookingConfirmationModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getApiBaseUrl } from "../../../../Backend/config/API_BASE_URL";
+import NotificationModal from "../../Components/Modals/NotificationModal";
 
 function AdoptionForm() {
   const navigate = useNavigate();
@@ -8,6 +9,12 @@ function AdoptionForm() {
   const { pet_id } = location.state || {};
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [petInfo, setPetInfo] = useState(null);
+  const [notification, setNotification] = useState({
+    isOpen: false,
+    type: "",
+    message: "",
+    redirectTo: "",
+  });
   const [formData, setFormData] = useState({
     purpose: "",
   });
@@ -41,8 +48,12 @@ function AdoptionForm() {
     e.preventDefault();
 
     if (!token) {
-      alert("You must be logged in to adopt a pet.");
-      navigate("/user/login");
+      setNotification({
+        isOpen: true,
+        type: "error",
+        message: "You need to sign in to adopt a pet!",
+        redirectTo: "/user/login",
+      });
       return;
     }
 
@@ -70,7 +81,11 @@ function AdoptionForm() {
       navigate("/user/adoption", { state: { showAdoptionConfirmation: true } });
     } catch (error) {
       console.error("Error submitting adoption request:", error);
-      alert("Failed to submit adoption request. Please try again.");
+      setNotification({
+        isOpen: true,
+        type: "error",
+        message: "Failed to submit adoption request. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -241,6 +256,13 @@ function AdoptionForm() {
           </form>
         </div>
       </div>
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        type={notification.type}
+        message={notification.message}
+        redirectTo={notification.redirectTo}
+      />
     </div>
   );
 }

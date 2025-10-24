@@ -60,7 +60,6 @@ function UserLoginPage() {
       // Save token & user info
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-
       // Redirect based on role
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
