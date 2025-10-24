@@ -51,9 +51,8 @@ function UserLoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-
       const data = await res.json();
-
+      setError(data.message);
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
       }
@@ -101,14 +100,6 @@ function UserLoginPage() {
             </h1>
             <p className="text-gray-600">Sign in to Pawfect Care</p>
           </div>
-
-          {/* Error Alert */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-in slide-in-from-top-2 duration-300">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-red-700 text-sm">{error}</p>
-            </div>
-          )}
 
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Field */}
@@ -195,6 +186,14 @@ function UserLoginPage() {
                 </p>
               )}
             </div>
+
+            {/* Error Alert */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 animate-in slide-in-from-top-2 duration-300">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
 
             {/* Forgot Password */}
             <div className="flex justify-end">

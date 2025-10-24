@@ -154,8 +154,8 @@ function MessagesPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      <div className="flex-grow p-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-screen-2xl mx-auto">
         <TopNavAdmin handleSignOut={handleSignOut} />
 
         {/* Conversation list */}

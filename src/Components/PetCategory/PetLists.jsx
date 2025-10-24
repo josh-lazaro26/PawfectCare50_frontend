@@ -339,7 +339,7 @@ function PetLists({ selectedCategory, onLoadingChange }) {
       )}
 
       {/* CSS Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideInUp {
           from {
             opacity: 0;

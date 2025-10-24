@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getApiBaseUrl } from "../../../../Backend/config/API_BASE_URL";
+import NotificationModal from "../../Components/Modals/NotificationModal";
 
-export default function UserRegistrationPage() {
+function UserRegistrationPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,12 +15,17 @@ export default function UserRegistrationPage() {
     birthdate: "",
     age: "",
     sex: "",
-    address: "", 
+    address: "",
     password: "",
-    confirmPassword: "", 
+    confirmPassword: "",
     role: "pet owner",
   });
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({
+    isOpen: false,
+    type: "",
+    message: "",
+  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -84,7 +90,11 @@ export default function UserRegistrationPage() {
         throw new Error(data.message || "Registration failed");
       }
 
-      alert("Registration successful!");
+      setNotification({
+        isOpen: true,
+        type: "success",
+        message: "Rigistration Complete",
+      });
       navigate("/user/login");
     } catch (err) {
       setError(err.message);
@@ -94,43 +104,50 @@ export default function UserRegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fdfaf6] px-4">
-      <div className="relative z-10 w-full max-w-lg space-y-6 bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 px-4 py-8">
+      <div className="relative z-10 w-full max-w-2xl bg-white shadow-2xl rounded-3xl p-8 md:p-10">
         {/* Logo */}
-        <div className="text-center">
-          <div className="text-3xl font-semibold text-[#a16f4a] flex items-center justify-center gap-2">
-            <span role="img" aria-label="paw">
+        <div className="text-center mb-8">
+          <div className="text-4xl font-bold text-[#a16f4a] flex items-center justify-center gap-3 mb-2">
+            <span role="img" aria-label="paw" className="text-5xl">
               🐾
-            </span>{" "}
+            </span>
             Pawfect Care
           </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Create your account to get started
+          </p>
         </div>
 
         {/* Registration Form */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {/* First & Last Name */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-amber-900">First Name</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                First Name
+              </label>
               <input
                 type="text"
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleChange}
-                placeholder="First Name"
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full focus:ring-2 focus:ring-amber-400"
+                placeholder="Enter first name"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
             </div>
             <div>
-              <label className="text-sm text-amber-900">Last Name</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                Last Name
+              </label>
               <input
                 type="text"
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleChange}
-                placeholder="Last Name"
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full focus:ring-2 focus:ring-amber-400"
+                placeholder="Enter last name"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
             </div>
@@ -138,48 +155,57 @@ export default function UserRegistrationPage() {
 
           {/* Email */}
           <div>
-            <label className="text-sm text-amber-900">Email</label>
+            <label className="block text-sm font-medium text-amber-900 mb-2">
+              Email Address
+            </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Email"
-              className="w-full px-3 py-2 border border-[#a16f4a] rounded-full focus:ring-2 focus:ring-amber-400"
+              placeholder="example@email.com"
+              className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
               required
             />
           </div>
 
           {/* Birthdate & Sex */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-amber-900">Date of Birth</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                Date of Birth
+              </label>
               <input
                 type="date"
                 name="birthdate"
                 value={formData.birthdate}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full focus:ring-2 focus:ring-amber-400"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
-              {formData.age && <p className="text-xs text-gray-600 mt-1"></p>}
+              {formData.age > 0 && (
+                <p className="text-xs text-gray-500 mt-1.5">
+                  Age: {formData.age} years
+                </p>
+              )}
             </div>
             <div>
-              <label className="text-sm text-amber-900">Sex</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                Sex
+              </label>
               <div className="relative">
                 <select
-                  id="sex"
                   name="sex"
                   value={formData.sex}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-[#a16f4a] rounded-full bg-white appearance-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl bg-white appearance-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition cursor-pointer"
                   required
                 >
-                  <option value="">Select</option>
+                  <option value="">Select sex</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-amber-600 pointer-events-none">
                   ▼
                 </span>
               </div>
@@ -187,19 +213,21 @@ export default function UserRegistrationPage() {
           </div>
 
           {/* Monthly Salary & Address */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-amber-900">Monthly Income</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                Monthly Income
+              </label>
               <div className="relative">
                 <select
                   name="monthly_salary"
                   value={formData.monthly_salary}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-[#a16f4a] rounded-full bg-white appearance-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl bg-white appearance-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition cursor-pointer"
                   required
                 >
                   <option value="" disabled>
-                    Select
+                    Select income range
                   </option>
                   <option value="Below₱5,000">₱0 - ₱5,000</option>
                   <option value="₱5,000-₱10,000">₱5,000 - ₱10,000</option>
@@ -208,20 +236,22 @@ export default function UserRegistrationPage() {
                   <option value="₱40,001-₱60,000">₱40,001 - ₱60,000</option>
                   <option value="Above₱60,000">Above ₱60,000</option>
                 </select>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-amber-600 pointer-events-none">
                   ▼
                 </span>
               </div>
             </div>
             <div>
-              <label className="text-sm text-amber-900">Address</label>
+              <label className="block text-sm font-medium text-amber-900 mb-2">
+                Address
+              </label>
               <input
                 type="text"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                placeholder="Enter address"
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full focus:ring-2 focus:ring-amber-400"
+                placeholder="Enter your address"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
             </div>
@@ -229,61 +259,89 @@ export default function UserRegistrationPage() {
 
           {/* Password */}
           <div>
-            <label className="text-sm text-amber-900">Password</label>
+            <label className="block text-sm font-medium text-amber-900 mb-2">
+              Password
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full pr-8 focus:ring-2 focus:ring-amber-400"
+                placeholder="Create a password"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl pr-12 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
-              <div
+              <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-2 flex items-center cursor-pointer text-amber-700"
+                className="absolute inset-y-0 right-3 flex items-center text-amber-700 hover:text-amber-900 transition"
               >
-                {showPassword ? <Eye /> : <EyeOff />}
-              </div>
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 
-          {/* Confirm Password (moved below) */}
+          {/* Confirm Password */}
           <div>
-            <label className="text-sm text-amber-900">Confirm Password</label>
+            <label className="block text-sm font-medium text-amber-900 mb-2">
+              Confirm Password
+            </label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm Password"
-                className="w-full px-3 py-2 border border-[#a16f4a] rounded-full pr-8 focus:ring-2 focus:ring-amber-400"
+                placeholder="Re-enter your password"
+                className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl pr-12 focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition"
                 required
               />
-              <div
+              <button
+                type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-2 flex items-center cursor-pointer text-amber-700"
+                className="absolute inset-y-0 right-3 flex items-center text-amber-700 hover:text-amber-900 transition"
               >
-                {showConfirmPassword ? <Eye /> : <EyeOff />}
-              </div>
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 
-          {/* Error */}
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
 
-          {/* Submit */}
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 rounded-full bg-[#a16f4a] text-white font-semibold text-lg hover:bg-amber-900 transition"
+            className="w-full py-3.5 rounded-xl bg-[#a16f4a] text-white font-semibold text-lg hover:bg-amber-900 transition shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed mt-6"
           >
-            {loading ? "Registering..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
+
+          {/* Login Link */}
+          <p className="text-center text-sm text-gray-600 mt-4">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/user/login")}
+              className="text-[#a16f4a] font-semibold hover:underline cursor-pointer"
+            >
+              Log in here
+            </span>
+          </p>
         </form>
       </div>
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        type={notification.type}
+        message={notification.message}
+      />
     </div>
   );
 }
+export default UserRegistrationPage();
