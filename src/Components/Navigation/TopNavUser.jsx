@@ -65,7 +65,7 @@ const TopNavUser = () => {
     localStorage.removeItem("token");
     setUser(null);
     setIsDropdownOpen(false);
-    navigate("/user/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (

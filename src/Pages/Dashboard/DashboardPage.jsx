@@ -14,7 +14,7 @@ function DashboardPage() {
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    navigate("/user/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {

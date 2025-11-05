@@ -16,7 +16,7 @@ function AdoptionRequest() {
 
   const handleSignOut = () => {
     localStorage.removeItem("loggedInAdmin");
-    navigate("/user/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const fetchRequests = async () => {

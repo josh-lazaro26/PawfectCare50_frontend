@@ -44,7 +44,7 @@ const UserMainRoute = {
 
 // Routes WITHOUT navbar
 const UserLoginRoute = {
-  path: "/user/login",
+  path: "/",
   element: (
     <PageTransition>
       <UserLoginPage />
@@ -54,9 +54,7 @@ const UserLoginRoute = {
 
 const UserRegistrationRoute = {
   path: "/user/registration",
-  element: (
-    <UserRegistrationPage />
-  ),
+  element: <UserRegistrationPage />,
 };
 
 const UserForgotPasswordRoute = {

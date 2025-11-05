@@ -17,7 +17,7 @@ function AppointmentPage() {
 
   const handleSignOut = () => {
     localStorage.removeItem("loggedInAdmin");
-    navigate("/user/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const appointmentMap = {
